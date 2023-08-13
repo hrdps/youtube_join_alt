@@ -213,7 +213,7 @@ export const removeFromPlaylist = catchAsycError(async (req, res, next) => {
 export const getAllUsers = catchAsycError(async (req, res, next) => {
   const users = await User.find();
 
-  res.status(200).json({
+  res.send(users).status(200).json({
     count: users.length,
     success: true,
     users,
