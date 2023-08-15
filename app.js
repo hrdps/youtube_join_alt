@@ -29,8 +29,11 @@ app.use('/api/v1', course);
 app.use('/api/v1', user);
 app.use('/api/v1', payment);
 app.use('/api/v1', other);
-app.get('/',(req, res) => {
-    res.send("GET Request Called")});
+app.get('/', (req, res) => {
+  res.send(
+    'Backend is working, click <a href="http://localhost:3000/" target="_blank">here</a> to access the frontend'
+  );
+});
 
 export default app;
 
