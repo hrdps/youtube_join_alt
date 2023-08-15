@@ -29,6 +29,8 @@ app.use('/api/v1', course);
 app.use('/api/v1', user);
 app.use('/api/v1', payment);
 app.use('/api/v1', other);
+app.use('/',(req, res) => {
+    res.send("GET Request Called")});
 
 export default app;
 
