@@ -2,6 +2,7 @@ import express from 'express';
 import { config } from 'dotenv';
 import errorMiddleware from './middlewares/Error.js';
 import cookieParser from 'cookie-parser';
+import cors from 'cors';
 
 config({
   path: './config/config.env',
@@ -18,6 +19,14 @@ app.use(
   })
 );
 app.use(cookieParser());
+app.use(
+  cors({
+    credentials: true,
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    origin: ['http://localhost:3000'], // whatever ports you used in frontend
+  })
+);
 //importing routes and controllers
 
 import course from './routes/courseRoutes.js';
@@ -34,7 +43,6 @@ app.get('/', (req, res) => {
     'Backend is working, click <a href="http://localhost:3000/" target="_blank">here</a> to access the frontend'
   );
 });
-
 export default app;
 
 app.use(errorMiddleware);
