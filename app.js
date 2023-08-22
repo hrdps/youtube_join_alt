@@ -24,7 +24,7 @@ app.use(
     credentials: true,
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     allowedHeaders: ['Content-Type', 'Authorization'],
-    origin: ['http://localhost:3000'], // whatever ports you used in frontend
+    origin: ['http://localhost:3000', 'http://127.0.0.1:3000'], // whatever ports you used in frontend
   })
 );
 //importing routes and controllers
