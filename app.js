@@ -19,14 +19,15 @@ app.use(
   })
 );
 app.use(cookieParser());
-app.use(
-  cors({
-    credentials: true,
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
-    allowedHeaders: ['Content-Type', 'Authorization'],
-    origin: true, // whatever ports you used in frontend
-  })
-);
+app.use('*', cors({ origin: true, credentials: true }));
+// app.use(
+//   cors({
+//     credentials: true,
+//     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+//     allowedHeaders: ['Content-Type', 'Authorization'],
+//     origin: true, // whatever ports you used in frontend
+//   })
+// );
 //importing routes and controllers
 
 import course from './routes/courseRoutes.js';
