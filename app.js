@@ -19,7 +19,17 @@ app.use(
   })
 );
 app.use(cookieParser());
-app.use('*', cors({ origin: true, credentials: true }));
+
+const corsOptions = {
+  origin: '*',
+  methods: 'GET, POST, PUT, DELETE',
+  allowedHeaders:
+    'Origin, X-Requested-With, Content-Type, Accept, Authorization',
+};
+
+app.use(cors(corsOptions));
+
+// app.use('*', cors({ origin: true, credentials: true }));
 // app.use(
 //   cors({
 //     credentials: true,
