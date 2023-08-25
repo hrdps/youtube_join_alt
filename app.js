@@ -22,6 +22,7 @@ app.use(cookieParser());
 
 const corsOptions = {
   credentials: true,
+  exposedHeaders: ['set-cookie'],
   origin: ['http://localhost:3000'],
   methods: 'GET, POST, PUT, DELETE',
   allowedHeaders:
