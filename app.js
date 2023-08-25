@@ -29,7 +29,6 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
-cd;
 
 // app.use('*', cors({ origin: true, credentials: true }));
 // app.use(
