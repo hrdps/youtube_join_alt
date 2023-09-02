@@ -17,7 +17,7 @@ export const getCourses = catchAsycError(async (req, res, next) => {
       $regex: category,
       $options: 'i',
     },
-  }).select('-lectures');
+  });
   res.status(200).json({
     count: courses.length,
     status: 200,
@@ -93,13 +93,10 @@ export const addCourseLecture = catchAsycError(async (req, res, next) => {
   course.numOfVideos = course.lectures.length;
   course.save();
 
-  res
-    .status(200)
-    .json({
-      count: course.lectures.length,
-      success: true,
-      lectures: course.lectures,
-    });
+  res.status(200).json({
+    success: true,
+    message: 'Lecture Added Successfully!',
+  });
 });
 
 export const deleteCourse = catchAsycError(async (req, res, next) => {

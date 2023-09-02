@@ -59,7 +59,9 @@ export const dashboardStats = catchAsncError(async (req, res, next) => {
   if (usersPercentage < 0) usersProfit = false;
   if (subscribersPercentage < 0) subscribersProfit = false;
   if (viewsPercentage < 0) viewsProfit = false;
-
+  usersPercentage = Math.round(usersPercentage * 10) / 10;
+  subscribersPercentage = Math.round(subscribersPercentage * 10) / 10;
+  viewsPercentage = Math.round(viewsPercentage * 10) / 10;
   res.status(200).json({
     success: true,
     stats: statsList,

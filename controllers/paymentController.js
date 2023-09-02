@@ -27,6 +27,7 @@ export const subscription = catchAsyncError(async (req, res, next) => {
 export const paymentVerification = catchAsyncError(async (req, res, next) => {
   const { razorpay_signature, razorpay_payment_id, razorpay_subscription_id } =
     req.body;
+
   const user = await User.findById(req.user);
   const subscription_id = user.subscription.id;
   const generated_signature = crypto
@@ -61,6 +62,7 @@ export const cancelSubscription = catchAsyncError(async (req, res, next) => {
   const user = await User.findById(req.user._id);
   const subscription_id = user.subscription.id;
   let refund = false;
+
   await instance.subscriptions.cancel(subscription_id);
   const payment = Payment.findOne({
     razorpay_subscription_id: subscription_id,

@@ -9,6 +9,8 @@ import getDataUri from '../utils/dataUri.js';
 import cloudinary from 'cloudinary';
 import { Stats } from '../models/stats.js';
 import { stat } from 'fs';
+import { instance } from '../server.js';
+import { Payment } from '../models/payment.js';
 
 export const register = catchAsycError(async (req, res, next) => {
   const { name, email, password } = req.body;
@@ -137,8 +139,8 @@ export const forgetpassword = catchAsycError(async (req, res, next) => {
   if (!user) return next(new errorHandler('User not found', 400));
   const resetToken = await user.getResetToken();
   await user.save();
-  const url = `${process.env.FRONTEND_URL}/api/v1/resetpassword/${resetToken}`;
-  const message = `Hi ${user.name},\n\nA password reset for your account was requested. Please click the button below to change your password.\n\nNote that this link is valid for 15 minutes. After the time limit has expired, you will have to resubmit the request for a password reset.\n\n${url}\n\nIf you did not make this request, please ignore.`;
+  const url = `${process.env.FRONTEND_URL}/resetpassword/${resetToken}`;
+  const message = `Hi ${user.name},\n\nA password reset for your account was requested. Please click the button below to change your password.\n\nNote that this link is valid for 15 minutes. After the time limit has expired, you will have to resubmit the request for a password reset.\n\n<a href='${url}'>Reset Link</a>\n\nIf you did not make this request, please ignore.`;
 
   await sendMail(user.email, 'CourseBundler Reset Password Link', message);
   res.status(200).json({
@@ -148,8 +150,11 @@ export const forgetpassword = catchAsycError(async (req, res, next) => {
 });
 
 export const resetPassword = catchAsycError(async (req, res, next) => {
-  const { password } = req.body;
-  if (!password) return next(new errorHandler('Please enter a password', 400));
+  const { password, repassword } = req.body;
+  if (!password || !repassword)
+    return next(new errorHandler('Please check the blank fields', 400));
+  if (password !== repassword)
+    return next(new errorHandler('Password did not match', 400));
   const { token } = req.params;
   if (!token) return next(new errorHandler('Invalid URL', 400));
   const resetPasswordToken = crypto
@@ -213,7 +218,7 @@ export const removeFromPlaylist = catchAsycError(async (req, res, next) => {
 export const getAllUsers = catchAsycError(async (req, res, next) => {
   const users = await User.find();
 
-  res.send(users).status(200).json({
+  res.status(200).json({
     count: users.length,
     success: true,
     users,
@@ -235,6 +240,33 @@ export const updateUserRole = catchAsycError(async (req, res, next) => {
 export const deleteUser = catchAsycError(async (req, res, next) => {
   const user = await User.findById(req.params.id);
   if (!user) return next(new errorHandler('User not found', 404));
+  if (
+    user.subscription !== undefined &&
+    user.subscription.status === 'active'
+  ) {
+    const subscription_id = user.subscription.id;
+    let refund = false;
+
+    await instance.subscriptions.cancel(subscription_id);
+    const payment = Payment.findOne({
+      razorpay_subscription_id: subscription_id,
+    });
+    if (!payment)
+      return next(
+        new errorHandler('There is some trouble feching payment info!', 400)
+      );
+    const gap = Date.now() - payment.createdAt;
+    const refundTime = process.env.REFUND_TIME * 24 * 60 * 60 * 1000;
+    if (refundTime > gap) {
+      refund = true;
+      await instance.payments.refund(payment.razorpay_payment_id);
+    }
+    await payment.deleteOne();
+
+    user.subscription.id = undefined;
+    user.subscription.status = undefined;
+    await user.save();
+  }
   await cloudinary.v2.uploader.destroy(user.avatar.public_id);
   await user.deleteOne();
   res.status(200).json({

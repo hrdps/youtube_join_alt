@@ -15,7 +15,7 @@ import {
   isAuthenticated,
 } from '../middlewares/auth.js';
 
-router.route('/courses').get(isAuthenticated, authorizedAdmin, getCourses);
+router.route('/courses').get(getCourses);
 router
   .route('/createcourse')
   .post(isAuthenticated, authorizedAdmin, singleUpload, createCourse);
