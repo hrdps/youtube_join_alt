@@ -23,7 +23,11 @@ app.use(cookieParser());
 const corsOptions = {
   credentials: true,
   exposedHeaders: ['set-cookie'],
-  origin: ['https://roaring-moxie-789c0e.netlify.app', 'http://localhost:3000'],
+  origin: [
+    'https://roaring-moxie-789c0e.netlify.app',
+    'http://localhost:3000',
+    'https://superlative-genie-3f162a.netlify.app',
+  ],
   methods: 'GET, POST, PUT, DELETE',
   allowedHeaders:
     'Origin, X-Requested-With, Content-Type, Accept, Authorization',
