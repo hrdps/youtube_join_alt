@@ -142,7 +142,7 @@ export const forgetpassword = catchAsycError(async (req, res, next) => {
   const url = `${process.env.FRONTEND_URL}/resetpassword/${resetToken}`;
   const message = `Hi ${user.name},\n\nA password reset for your account was requested. Please click the button below to change your password.\n\nNote that this link is valid for 15 minutes. After the time limit has expired, you will have to resubmit the request for a password reset.\n\n<a href='${url}'>Reset Link</a>\n\nIf you did not make this request, please ignore.`;
 
-  await sendMail(user.email, 'CourseBundler Reset Password Link', message);
+  await sendMail(user.email, 'CourseClump Reset Password Link', message);
   res.status(200).json({
     success: true,
     message: 'Reset Password link has been sent on the registered email',

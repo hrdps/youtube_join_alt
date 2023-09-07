@@ -8,7 +8,7 @@ export const contact = catchAsncError(async (req, res, next) => {
   if (!name || !email || !message)
     return next(new errorHandler('Please enter the blank fields', 400));
   const to = process.env.MY_MAIL;
-  const subject = 'New Contact Submission! - CourseBundler';
+  const subject = 'New Contact Submission! - CourseClump';
   const text = `Name: ${name}\nEmail: ${email}\nMessage: ${message}`;
   await sendMail(to, subject, text);
 
@@ -23,7 +23,7 @@ export const requestCourse = catchAsncError(async (req, res, next) => {
   if (!name || !email || !course)
     return next(new errorHandler('Please enter the blank fields', 400));
   const to = process.env.MY_MAIL;
-  const subject = 'New Course Request! - CourseBundler';
+  const subject = 'New Course Request! - CourseClump';
   const text = `Name: ${name}\nEmail: ${email}\nCourse: ${course}`;
   await sendMail(to, subject, text);
 
